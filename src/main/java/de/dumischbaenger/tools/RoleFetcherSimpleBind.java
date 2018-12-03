@@ -27,10 +27,12 @@ public class RoleFetcherSimpleBind {
     String ldapBindDn = System.getProperty("ldapBindDn");
     String ldapPassword = System.getProperty("ldapPassword");
     String ldapURL =  System.getProperty("ldapURL");
+    String ldapKeystore =  System.getProperty("ldapKeystore");
+    String ldapKeystorePWD =  System.getProperty("ldapKeystorePWD");
     String ldapSearchBase =  System.getProperty("ldapSearchBase");
     String ldapFilter =  System.getProperty("ldapFilter");
     String ldapReturnAttr =  System.getProperty("ldapReturnAttr");
-  
+    
     
     Hashtable<String,Object> env = new Hashtable<String, Object>(11);
     env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
@@ -42,7 +44,12 @@ public class RoleFetcherSimpleBind {
     env.put(Context.SECURITY_CREDENTIALS, ldapPassword);
     
     // Specify SSL
-    //env.put(Context.SECURITY_PROTOCOL, "ssl");
+    if(ldapURL.toLowerCase().startsWith("ldaps:")) {
+      LOG.info("Attention using _SSL_");
+      System.setProperty("javax.net.ssl.trustStorePassword", ldapKeystorePWD);
+      System.setProperty("javax.net.ssl.trustStore", ldapKeystore);
+      env.put(Context.SECURITY_PROTOCOL, "ssl");
+    }
 
     
     //turn on ldap trace
