@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.security.Principal;
-import java.security.Security;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,9 +21,6 @@ public class JavaADLdapSimpleBind {
 
     LOG.info("program started");
 
-    Security.setProperty("auth.login.defaultCallbackHandler", "de.dumischbaenger.kerberos.KerberosCallBackHandler");
-    Security.setProperty("login.configuration.provider", "de.dumischbaenger.kerberos.KerberosConfig");
-
     try {
       // load a properties file from class path, inside static method
       InputStream is = JavaADLdapSimpleBind.class.getResourceAsStream("/config.properties");
@@ -36,9 +32,16 @@ public class JavaADLdapSimpleBind {
 
     }
 
-    String props[] = { "javax.security.auth.useSubjectCredsOnly", "java.security.krb5.realm", "java.security.krb5.kdc",
-        "auth.login.defaultCallbackHandler", "login.configuration.provider", "java.security.auth.login.config",
-        "login.config.url.1", "login.config.url.2", "login.config.url.3", };
+    String props[] = {
+        "ldapBindDn",
+        "ldapPassword",
+        "ldapURL",
+        "ldapKeystore",
+        "ldapSearchBase",
+        "ldapFilter",
+        "ldapReturnAttr",
+        "ldapKeystorePWD"
+    };
 
     for (int i = 0; i < props.length; i++) {
       LOG.info(props[i] + ": " + System.getProperty(props[i]));
